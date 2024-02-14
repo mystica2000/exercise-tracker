@@ -1,0 +1,63 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+#app {
+  height: 100vh;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-items: center;
+  gap: 2em;
+}
+
+
+.main-container {
+  flex: 70%;
+}
+
+.btn-center {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.btn {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  background: #5495f7;
+  border: 2px solid #5495f7;
+  font-size: 1.6em;
+  color: black;
+}
+
+.btn-small {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  background: #5495f7;
+  border: 2px solid #5495f7;
+  font-size: 1.6em;
+  color: black;
+}
