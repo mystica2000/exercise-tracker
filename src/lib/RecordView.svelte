@@ -5,6 +5,11 @@
 
   let pauseOrStop = "Pause";
 
+  let elapsedTime = 0;
+  let elapsedTimeText = "00";
+  let elapsedTimeTextMilli = "00";
+  let progress = 0;
+
   const handleStop = () => {
     view.set(View.STAT_VIEW);
     action.set(Action.PAUSE);
@@ -13,21 +18,26 @@
   const handleRestart = () => {
     action.set(Action.RESET);
     pause.set(true);
+
+    elapsedTimeText = "00";
+    elapsedTime = 0;
+    elapsedTimeTextMilli = "00";
+    progress = 0;
   };
 
   const handlePausePlay = () => {
     pauseOrStop = pauseOrStop == "Pause" ? "Play" : "Pause";
     pause.update((pause) => !pause);
 
-    action.update((act) =>
-      act = (pauseOrStop) == "Pause" ? Action.PAUSE : Action.PLAY
+    action.update(
+      (act) => (act = pauseOrStop == "Pause" ? Action.PAUSE : Action.PLAY)
     );
   };
 </script>
 
 <main class="main-container">
   <div class="timer-center">
-    <Timer />
+    <Timer bind:elapsedTimeText={elapsedTimeText} bind:elapsedTime={elapsedTime} bind:elapsedTimeTextMilli={elapsedTimeTextMilli} bind:progress={progress}/>
   </div>
 </main>
 

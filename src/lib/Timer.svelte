@@ -4,19 +4,18 @@
 
   const radius = 145; // half of the circle's diameter
   const circumference = 2 * Math.PI * radius;
-  let progress = 0;
-  let elapsedTimeText = "00";
-  let elapsedTimeTextMilli = "000";
+  export let progress = 0;
+  export let elapsedTime = 0;
+  export let elapsedTimeText = "00"
+  export let elapsedTimeTextMilli = "00";
 
   let startTime;
-  let elapsedTime = 0;
   let intervalObj;
 
   const startTimer = () => {
     startTime = Date.now() - elapsedTime;
 
     intervalObj = setInterval(() => {
-      console.log("interval ", intervalObj);
       elapsedTime = Date.now() - startTime;
 
       // Convert time to seconds
@@ -40,7 +39,7 @@
       let hh = hours.toString().padStart(2, "0");
       let mm = minutes.toString().padStart(2, "0");
       let ss = seconds.toString().padStart(2, "0");
-      let ms = milliseconds.toString().padStart(2, "0");
+      let ms = milliseconds.toString().padStart(2, "0").slice(0,2);
 
       if (hours) {
         // Ensure two-digit formatting
@@ -52,7 +51,7 @@
         elapsedTimeText = `${ss}`;
       }
 
-      elapsedTimeTextMilli = `${ms.slice(0,2)}`;
+      elapsedTimeTextMilli = ms;
     }, 10);
   };
 
@@ -77,7 +76,7 @@
 <div class="item">
   <div class="time">
     <h3>{elapsedTimeText}</h3>
-    <h4>{elapsedTimeTextMilli}</h4>
+    <h6 style="text-align: end;">{elapsedTimeTextMilli}</h6>
   </div>
 
   <svg width="300" height="300" xmlns="http://www.w3.org/2000/svg">
@@ -118,6 +117,10 @@
 
   .item {
     position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .time {
@@ -130,7 +133,6 @@
 
     font-size: 3.5em;
 
-    width: 100%;
 
     line-height: 0.9em;
     height: 100%;
