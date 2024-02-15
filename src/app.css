@@ -42,7 +42,7 @@
   align-items: center;
 }
 
-.btn {
+.btn-large {
   border-radius: 50%;
   width: 100px;
   height: 100px;
@@ -60,4 +60,11 @@
   border: 2px solid #5495f7;
   font-size: 1.6em;
   color: black;
+}
+
+.btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }

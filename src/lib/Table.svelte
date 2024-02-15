@@ -3,9 +3,13 @@
     <th>Date</th>
     <th>Minutes</th>
     <th>Count</th>
+    <th>Edit</th>
+    <th>Delete</th>
   </thead>
   <tbody>
     <tr>
+      <td>H</td>
+      <td>H</td>
       <td>H</td>
       <td>H</td>
       <td>H</td>

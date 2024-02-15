@@ -1,6 +1,7 @@
 <script>
   import { action, pause, view } from "../store/store";
   import { Action, View } from "../util";
+  import StartIcon from "../icon/startIcon.svelte";
   import Table from "./Table.svelte";
 
   const handleStart = () => {
@@ -17,5 +18,12 @@
 </main>
 
 <footer class="btn-center">
-  <button class="btn" on:click={handleStart}>Start</button>
+  <button
+    class="btn-large btn"
+    on:click={handleStart}
+    aria-labelledby="pause-play-label"
+  >
+    <span id="pause-play-label" hidden>Start</span>
+    <StartIcon />
+  </button>
 </footer>

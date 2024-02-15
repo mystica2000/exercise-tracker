@@ -1,4 +1,8 @@
 <script>
+  import PauseIcon from "../icon/pauseIcon.svelte";
+  import PlayIcon from "../icon/playIcon.svelte";
+  import RestartIcon from "../icon/restartIcon.svelte";
+  import StopIcon from "../icon/stopIcon.svelte";
   import { action, pause, timer, view } from "../store/store";
   import { Action, View } from "../util";
   import Timer from "./Timer.svelte";
@@ -37,14 +41,43 @@
 
 <main class="main-container">
   <div class="timer-center">
-    <Timer bind:elapsedTimeText={elapsedTimeText} bind:elapsedTime={elapsedTime} bind:elapsedTimeTextMilli={elapsedTimeTextMilli} bind:progress={progress}/>
+    <Timer
+      bind:elapsedTimeText
+      bind:elapsedTime
+      bind:elapsedTimeTextMilli
+      bind:progress
+    />
   </div>
 </main>
 
 <footer class="btn-center">
-  <button class="btn-small" on:click={handleRestart}>Restart</button>
-  <button class="btn" on:click={handlePausePlay}>{pauseOrStop}</button>
-  <button class="btn-small" on:click={handleStop}>Stop</button>
+  <button
+    class="btn-small btn"
+    on:click={handleRestart}
+    aria-labelledby="restart-label"
+  >
+    <span id="restart-label" hidden>Restart</span>
+    <RestartIcon />
+  </button>
+  <button
+    class="btn-large btn"
+    on:click={handlePausePlay}
+    aria-labelledby="pause-play-label"
+  >
+    <span id="pause-play-label" hidden>{pauseOrStop}</span>
+    {#if $pause}
+      <PlayIcon />
+    {:else}
+      <PauseIcon />
+    {/if}</button
+  >
+  <button
+    class="btn-small btn"
+    on:click={handleStop}
+    aria-labelledby="stop-label"
+  >
+    <span id="stop-label" hidden>Stop</span><StopIcon />
+  </button>
 </footer>
 
 <style>

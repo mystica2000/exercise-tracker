@@ -142,4 +142,8 @@
   }
 
 
+  h3 {
+    font-size: 1em;
+  }
+
 </style>
