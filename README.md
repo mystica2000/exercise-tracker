@@ -11,3 +11,5 @@ TODO:
 - ability to save
 - add heatmap for streaks, PR etc
 - push notifications (with running timer)
+- cleanup components
+- define styles for difference screens
