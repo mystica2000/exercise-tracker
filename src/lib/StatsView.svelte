@@ -19,7 +19,7 @@
 
 <footer class="btn-center">
   <button
-    class="btn-large btn"
+    class="btn-large btn sticky"
     on:click={handleStart}
     aria-labelledby="pause-play-label"
   >
@@ -27,3 +27,16 @@
     <StartIcon />
   </button>
 </footer>
+
+<style>
+  .sticky {
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+  }
+
+  .stat-view {
+    max-width: 790px;
+  width: 100%;
+  }
+</style>

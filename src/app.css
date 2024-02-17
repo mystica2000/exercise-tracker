@@ -21,6 +21,7 @@
 
 #app {
   height: 100vh;
+  position: relative;
 }
 
 .main-container {

@@ -1,9 +1,11 @@
 <script>
+  import { withDbOperation } from "../db/db";
   import PauseIcon from "../icon/pauseIcon.svelte";
   import PlayIcon from "../icon/playIcon.svelte";
   import RestartIcon from "../icon/restartIcon.svelte";
   import StopIcon from "../icon/stopIcon.svelte";
-  import { action, pause, timer, view } from "../store/store";
+  import { dataStoreInstance } from "../store/dataStore";
+  import { action, db, pause, view } from "../store/store";
   import { Action, View } from "../util";
   import Timer from "./Timer.svelte";
 
@@ -14,7 +16,13 @@
   let elapsedTimeTextMilli = "00";
   let progress = 0;
 
-  const handleStop = () => {
+  const handleStop = async () => {
+
+    const result = await withDbOperation($db, "insert", {count: 1000, date: new Date().getDate(), time: elapsedTimeText })
+    console.log(result);
+
+    dataStoreInstance.dispatch({type:"insert", obj: result});
+
     view.set(View.STAT_VIEW);
     action.set(Action.PAUSE);
   };

@@ -1,6 +1,6 @@
 <script>
   import { onDestroy, onMount } from "svelte";
-  import { action, pause, timer } from "../store/store";
+  import { pause } from "../store/store";
 
   const radius = 145; // half of the circle's diameter
   const circumference = 2 * Math.PI * radius;
@@ -45,10 +45,8 @@
         // Ensure two-digit formatting
 
         elapsedTimeText = `${hh}:${mm}:${ss}`;
-      } else if (minutes) {
-        elapsedTimeText = `${mm}:${ss}`;
       } else if (seconds) {
-        elapsedTimeText = `${ss}`;
+        elapsedTimeText = `${mm}:${ss}`;
       }
 
       elapsedTimeTextMilli = ms;
