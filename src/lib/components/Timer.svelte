@@ -1,16 +1,52 @@
 <script>
   import { onDestroy, onMount } from "svelte";
-  import { pause } from "../store/store";
+  import { action, pause } from "../../store/store";
+  import { getSVGStyles } from "../../util";
+  import { Action } from "../../constant";
 
-  const radius = 145; // half of the circle's diameter
-  const circumference = 2 * Math.PI * radius;
-  export let progress = 0;
-  export let elapsedTime = 0;
-  export let elapsedTimeText = "00"
-  export let elapsedTimeTextMilli = "00";
+  let radius; // half of the circle's diameter
+  let circumference;
+  let xy, hw;
+
+  let progress = 0;
+  let elapsedTime = 0;
+  let elapsedTimeTextMilli = "00";
+
+  action.subscribe((val) => {
+    if (val == Action.RESET) {
+      elapsedTimeText = "00";
+      elapsedTime = 0;
+      elapsedTimeTextMilli = "00";
+      progress = 0;
+    }
+  });
+
+  export let elapsedTimeText = "00";
 
   let startTime;
   let intervalObj;
+
+  const setWindowWidth = () => {
+    const { newRadi, newHw, newXy } = getSVGStyles(window.innerWidth);
+
+    radius = newRadi;
+    hw = newHw;
+    xy = newXy;
+
+    circumference = 2 * Math.PI * radius;
+
+    console.log("sdasdasdasd", radius, hw, xy, circumference, progress);
+  };
+
+  onMount(() => {
+    setWindowWidth();
+
+    window.addEventListener("resize", setWindowWidth);
+
+    return () => {
+      window.removeEventListener("resize", setWindowWidth);
+    };
+  });
 
   const startTimer = () => {
     startTime = Date.now() - elapsedTime;
@@ -39,7 +75,7 @@
       let hh = hours.toString().padStart(2, "0");
       let mm = minutes.toString().padStart(2, "0");
       let ss = seconds.toString().padStart(2, "0");
-      let ms = milliseconds.toString().padStart(2, "0").slice(0,2);
+      let ms = milliseconds.toString().padStart(2, "0").slice(0, 2);
 
       if (hours) {
         // Ensure two-digit formatting
@@ -77,14 +113,14 @@
     <h6 style="text-align: end;">{elapsedTimeTextMilli}</h6>
   </div>
 
-  <svg width="300" height="300" xmlns="http://www.w3.org/2000/svg">
+  <svg width={hw} height={hw} xmlns="http://www.w3.org/2000/svg">
     <!-- Background circle -->
-    <circle class="background-circle" cx="150" cy="150" r={radius} />
+    <circle class="background-circle" cx={xy} cy={xy} r={radius} />
 
     <circle
       class="circle"
-      cx="150"
-      cy="150"
+      cx={xy}
+      cy={xy}
       r={radius}
       stroke-dasharray={circumference}
       stroke-dashoffset={circumference * (1 - progress)}
@@ -122,7 +158,6 @@
   }
 
   .time {
-
     font-family: Arial, sans-serif;
 
     text-align: center;
@@ -131,7 +166,6 @@
 
     font-size: 3.5em;
 
-
     line-height: 0.9em;
     height: 100%;
     display: flex;
@@ -139,9 +173,7 @@
     justify-content: center;
   }
 
-
   h3 {
     font-size: 1em;
   }
-
 </style>

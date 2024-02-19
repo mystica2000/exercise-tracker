@@ -3,14 +3,21 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: white;
+  background-color: #192029;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --timer-radius-sm: 145;
+  --circle-width-height-sm: 300;
+  --circle-x-y-sm: 150;
+
+  --timer-radius-lg: 290;
+  --circle-width-height-lg: 600;
+  --circle-x-y-sm: 300;
 }
 
 * {
@@ -31,7 +38,6 @@
   justify-items: center;
   gap: 2em;
 }
-
 
 .main-container {
   flex: 70%;
@@ -68,4 +74,19 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.view {
+  max-width: 790px;
+  width: 100%;
+  margin-top: 2em;
+}
+
+@media screen and (max-width: 800px) {
+  .view {
+    max-width: 100%;
+    max-width: -webkit-fill-available;
+    max-width: -moz-available;
+    margin: 1em;
+  }
 }

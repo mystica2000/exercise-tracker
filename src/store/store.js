@@ -1,8 +1,8 @@
 import { writable } from "svelte/store";
-import { Action, View } from "../util";
+import { Action, State, View } from "../constant";
 
 // view of the page
-export const view = writable(View.STAT_VIEW);
+export const view = writable(View.MAIN_VIEW);
 
 export const pause = writable(false);
 
@@ -11,3 +11,5 @@ export const action = writable(Action.PLAY);
 
 // to store global db
 export const db = writable(null);
+
+export const currentState = writable(State.START)

@@ -6,60 +6,43 @@
   import StopIcon from "../icon/stopIcon.svelte";
   import { dataStoreInstance } from "../store/dataStore";
   import { action, db, pause, view } from "../store/store";
-  import { Action, View } from "../util";
-  import Timer from "./Timer.svelte";
+  import { Action, View } from "../constant";
+  import Timer from "./components/Timer.svelte";
 
-  let pauseOrStop = "Pause";
-
-  let elapsedTime = 0;
   let elapsedTimeText = "00";
-  let elapsedTimeTextMilli = "00";
-  let progress = 0;
 
   const handleStop = async () => {
+    const result = await withDbOperation($db, "insert", {
+      count: 1000,
+      date: new Intl.DateTimeFormat("en-US").format(new Date()),
+      time: elapsedTimeText,
+    });
 
-    const result = await withDbOperation($db, "insert", {count: 1000, date: new Date().getDate(), time: elapsedTimeText })
-    console.log(result);
+    dataStoreInstance.dispatch({ type: "insert", obj: result });
 
-    dataStoreInstance.dispatch({type:"insert", obj: result});
-
-    view.set(View.STAT_VIEW);
+    view.set(View.MAIN_VIEW);
     action.set(Action.PAUSE);
   };
 
   const handleRestart = () => {
     action.set(Action.RESET);
     pause.set(true);
-
-    elapsedTimeText = "00";
-    elapsedTime = 0;
-    elapsedTimeTextMilli = "00";
-    progress = 0;
   };
 
   const handlePausePlay = () => {
-    pauseOrStop = pauseOrStop == "Pause" ? "Play" : "Pause";
+    action.update((act) => (act = $pause ? Action.PAUSE : Action.PLAY));
     pause.update((pause) => !pause);
-
-    action.update(
-      (act) => (act = pauseOrStop == "Pause" ? Action.PAUSE : Action.PLAY)
-    );
   };
 </script>
 
 <main class="main-container">
   <div class="timer-center">
     <h2>Target 🎯: 1000</h2>
-    <Timer
-      bind:elapsedTimeText
-      bind:elapsedTime
-      bind:elapsedTimeTextMilli
-      bind:progress
-    />
+    <Timer bind:elapsedTimeText />
   </div>
 </main>
 
-<footer class="btn-center">
+<footer class="btn-center footer-btn">
   <button
     class="btn-small btn"
     on:click={handleRestart}
@@ -73,7 +56,8 @@
     on:click={handlePausePlay}
     aria-labelledby="pause-play-label"
   >
-    <span id="pause-play-label" hidden>{pauseOrStop}</span>
+    <span id="pause-play-label" hidden>{$pause == true ? "Play" : "Pause"}</span
+    >
     {#if $pause}
       <PlayIcon />
     {:else}
@@ -105,4 +89,16 @@
     margin-bottom: 1em;
   }
 
+  .footer-btn {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
+  @media screen and (min-width: 720px) {
+    .footer-btn {
+      justify-content: center;
+      gap: 5em;
+    }
+  }
 </style>

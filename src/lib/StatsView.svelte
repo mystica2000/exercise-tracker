@@ -1,42 +1,26 @@
 <script>
-  import { action, pause, view } from "../store/store";
-  import { Action, View } from "../util";
-  import StartIcon from "../icon/startIcon.svelte";
-  import Table from "./Table.svelte";
-
-  const handleStart = () => {
-    view.set(View.RECORD_VIEW);
-    pause.set(false);
-    action.set(Action.PLAY);
-  };
+  import Chart from "./components/Chart.svelte";
 </script>
 
 <main class="main-container">
-  <div class="stat-view">
-    <Table />
+  <div class="view">
+    <div class="right-align">
+      <span class="streak">🔥 Streaks: 1</span>
+    </div>
+    <section>
+      <Chart />
+    </section>
   </div>
 </main>
 
-<footer class="btn-center">
-  <button
-    class="btn-large btn sticky"
-    on:click={handleStart}
-    aria-labelledby="pause-play-label"
-  >
-    <span id="pause-play-label" hidden>Start</span>
-    <StartIcon />
-  </button>
-</footer>
-
 <style>
-  .sticky {
-    position: fixed;
-    bottom: 50px;
-    right: 50px;
+  .right-align {
+    text-align: right;
   }
 
-  .stat-view {
-    max-width: 790px;
-  width: 100%;
+  .streak {
+    background-color: #4bb543;
+    border: 2px solid #4bb543;
+    padding: 1em;
   }
 </style>

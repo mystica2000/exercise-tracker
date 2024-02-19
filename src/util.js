@@ -1,11 +1,9 @@
 
-export const View = {
-  STAT_VIEW: 0,
-  RECORD_VIEW: 1,
-};
 
-export const Action = {
-  PAUSE: 0,
-  PLAY: 1,
-  RESET: 2
+export const getSVGStyles = (width) => {
+  if (width > 700 && window.screen.orientation.type == "portrait-primary") {
+    return { newRadi: 245, newHw: 500, newXy: 250 }
+  } else {
+    return { newRadi: 145, newHw: 300, newXy: 150 }
+  }
 }

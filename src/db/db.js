@@ -45,22 +45,22 @@ export const initDB = async () => {
 export const withDbOperation = (db, operation, data) => {
   return new Promise((resolve, reject) => {
     const handleOperation = (db) => {
-        switch (operation) {
-          case "insert":
-            insertRecord(db, data).then(resolve).catch(reject);
-            break;
-          case "update":
-            updateRecord(db, data).then(resolve).catch(reject);
-            break;
-          case "delete":
-            deleteRecord(db,data).then(resolve).catch(reject);
-            break;
-          case "getAll":
-            getAll(db).then(resolve).catch(reject);
-            break;
-          default:
-            reject(new Error(`Unsupported operation: ${operation}`));
-        }
+      switch (operation) {
+        case "insert":
+          insertRecord(db, data).then(resolve).catch(reject);
+          break;
+        case "update":
+          updateRecord(db, data).then(resolve).catch(reject);
+          break;
+        case "delete":
+          deleteRecord(db, data).then(resolve).catch(reject);
+          break;
+        case "getAll":
+          getAll(db).then(resolve).catch(reject);
+          break;
+        default:
+          reject(new Error(`Unsupported operation: ${operation}`));
+      }
     };
 
     if (!db) {
@@ -86,15 +86,15 @@ const insertRecord = async (db, data) => {
 
     request.onsuccess = (event) => {
       const addedRecord = { ...data, id: event.target.result };
-       console.log(addedRecord)
+      console.log(addedRecord)
       // Now you can use the key to update the data
-      var updateRequest = activityStore.put({...data, id: addedRecord.id }, addedRecord.id);
+      var updateRequest = activityStore.put({ ...data, id: addedRecord.id }, addedRecord.id);
 
-      updateRequest.onsuccess = function() {
+      updateRequest.onsuccess = function () {
         resolve(addedRecord);
       };
 
-      updateRequest.onerror = function(event) {
+      updateRequest.onerror = function (event) {
         console.error("Update failed:", event.target.error);
       };
 
@@ -116,7 +116,12 @@ const getAll = async (db) => {
     const request = activityStore.getAll();
 
     request.onsuccess = (event) => {
-      const allRecord = event.target.result;
+      let allRecord = event.target.result;
+
+      allRecord = allRecord.sort(function (a, b) {
+        return b.id - a.id;
+      });
+
       resolve(allRecord);
     };
 
@@ -167,7 +172,7 @@ const deleteRecord = (db, key) => {
 };
 
 /**
- * Note: 
+ * Note:
  * The below lines of code have to be done back to back, else transaction ends/closed
  * (https://stackoverflow.com/a/50858601)
  * TLDR; js event loop clock tick have to be same for the below
