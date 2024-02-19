@@ -3,6 +3,8 @@
   import { withDbOperation } from "../db/db";
   import { db } from "../store/store";
   import { dataStoreInstance } from "../store/dataStore";
+  import MoreIcon from "../icon/moreIcon.svelte";
+  import Menu from "./Menu.svelte";
 
   onMount(()=> {
     fetchActivity();
@@ -26,8 +28,7 @@
     <th>Date</th>
     <th>Minutes</th>
     <th>Count</th>
-    <th>Edit</th>
-    <th>Delete</th>
+    <th>Edit/Delete</th>
   </thead>
   <tbody>
       {#if result}
@@ -36,8 +37,7 @@
             <td>{date}</td>
             <td>{time}</td>
             <td>{count}</td>
-            <td>Edit</td>
-            <td>Delete</td>
+            <td><Menu /></td>
           </tr>
         {/each}
       {/if}
