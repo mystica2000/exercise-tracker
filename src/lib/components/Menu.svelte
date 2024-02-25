@@ -1,9 +1,7 @@
 <script>
   import MoreIcon from "../../icon/moreIcon.svelte";
-  import Delete from "../dialogs/delete.svelte";
   import Edit from "../dialogs/edit.svelte";
 
-  import Dialog from "../dialogs/edit.svelte";
   let dialog;
 
   let isMenuOpen = false;

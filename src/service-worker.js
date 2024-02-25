@@ -9,14 +9,43 @@ self.addEventListener('message', (event) => {
       });
     });
   } else if (event.data && event.data === "showNotification") {
-    console.log("timer running")
     // Add logic to show a new notification
-    this.registration.showNotification('Timer Running', {
-      body: 'BYE',
+    this.registration.showNotification('Your timer is actively running. Stay focused', {
+      body: 'Timer in Progress...',
       actions: [
-        { action: 'yourActionIdentifier', title: 'Your Button Title' }
+        { action: 'pauseButton', title: 'Pause' },
+        { action: 'stopButton', title: 'Stop' },
+        { action: 'resetButton', title: 'Reset' },
       ]
       // Add other notification options as needed
     });
   }
+});
+
+self.addEventListener('notificationclick', function(event) {
+  const notification = event.notification;
+
+  const action = event.action;
+
+  switch(action) {
+    case "pauseButton": {
+      break;
+    }
+    case "stopButton": {
+      break;
+    }
+    case "resetButton": {
+      break;
+    }
+    default: {
+      break;
+    }
+  }
+
+  notification.close();
+
+  event.waitUntil(
+     this.clients.openWindow('/')
+  );
+
 });
