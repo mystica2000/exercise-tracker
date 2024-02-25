@@ -12,6 +12,25 @@
   let elapsedTime = 0;
   let elapsedTimeTextMilli = "00";
 
+  // Check if the browser supports the Notification API
+if ('Notification' in window) {
+  Notification.requestPermission().then((permission) => {
+    if (permission === 'granted') {
+      // Permission has been granted
+      console.log('Notification permission granted!');
+    } else if (permission === 'denied') {
+      // Permission has been denied
+      console.warn('Notification permission denied!');
+    } else if (permission === 'default') {
+      // The user closed the permission prompt without making a choice
+      console.log('Notification permission dismissed.');
+    }
+  });
+} else {
+  console.error('Notification API not supported in this browser.');
+}
+
+
   action.subscribe((val) => {
     if (val == Action.RESET) {
       elapsedTimeText = "00";
@@ -23,8 +42,8 @@
 
   export let elapsedTimeText = "00";
 
-  // let startTime;
-  // let intervalObj;
+  let startTime;
+  let intervalObj;
 
   const setWindowWidth = () => {
     const { newRadi, newHw, newXy } = getSVGStyles(window.innerWidth);
@@ -34,6 +53,8 @@
     xy = newXy;
 
     circumference = 2 * Math.PI * radius;
+
+    console.log("sdasdasdasd", radius, hw, xy, circumference, progress);
   };
 
   onMount(() => {
@@ -46,94 +67,63 @@
     };
   });
 
-  //listen to messages
-  navigator.serviceWorker.onmessage = (event) => {
-    console.log(event);
+  const startTimer = () => {
+    startTime = Date.now() - elapsedTime;
 
-    if (event.data && event.data.action === "updateTimerDone") {
-      progress = event.data.progress;
-      elapsedTimeText = event.data.elapsedTimeText;
-      elapsedTimeTextMilli = event.data.elapsedTimeTextMilli;
-    } else if (event.data && event.data.action == "pauseTimerDone") {
-      progress = event.data.progress;
-      elapsedTimeText = event.data.elapsedTimeText;
-      elapsedTimeTextMilli = event.data.elapsedTimeTextMilli;
-    } 
+    intervalObj = setInterval(() => {
+      elapsedTime = Date.now() - startTime;
+
+      // Convert time to seconds
+      let totalSeconds = Math.floor(elapsedTime / 1000);
+
+      // Set the progress based on the time elapsed
+      progress = (totalSeconds % 60) / 60;
+
+      let hours = Math.floor(totalSeconds / 3600);
+      totalSeconds = totalSeconds % 3600;
+
+      // Calculate minutes
+      let minutes = Math.floor(totalSeconds / 60);
+
+      // Calculate remaining seconds
+      let seconds = Math.floor(totalSeconds % 60);
+
+      // Calculate remaining milliseconds
+      let milliseconds = Math.floor(elapsedTime % 1000);
+
+      let hh = hours.toString().padStart(2, "0");
+      let mm = minutes.toString().padStart(2, "0");
+      let ss = seconds.toString().padStart(2, "0");
+      let ms = milliseconds.toString().padStart(2, "0").slice(0, 2);
+
+      if (hours) {
+        // Ensure two-digit formatting
+
+        elapsedTimeText = `${hh}:${mm}:${ss}`;
+      } else if (seconds) {
+        elapsedTimeText = `${mm}:${ss}`;
+      }
+
+      elapsedTimeTextMilli = ms;
+    }, 10);
   };
 
-  onDestroy(() => {
-    navigator.serviceWorker.removeEventListener("message", timerOperations);
-  });
-
-  const timerOperations = (event) => {
-    const data = event;
-
-    console.log(data);
-
-    // if (data && data.action === "updateTimer") {
-    //   elapsedTimeText = data.elapsedTimeText;
-    //   elapsedTimeTextMilli = data.elapsedTimeTextMilli;
-    //   progress = data.progress;
-    // }
+  const pauseTimer = () => {
+    clearInterval(intervalObj);
   };
-
-  // const startTimer = () => {
-  //   startTime = Date.now() - elapsedTime;
-
-  //   intervalObj = setInterval(() => {
-  //     elapsedTime = Date.now() - startTime;
-
-  //     // Convert time to seconds
-  //     let totalSeconds = Math.floor(elapsedTime / 1000);
-
-  //     // Set the progress based on the time elapsed
-  //     progress = (totalSeconds % 60) / 60;
-
-  //     let hours = Math.floor(totalSeconds / 3600);
-  //     totalSeconds = totalSeconds % 3600;
-
-  //     // Calculate minutes
-  //     let minutes = Math.floor(totalSeconds / 60);
-
-  //     // Calculate remaining seconds
-  //     let seconds = Math.floor(totalSeconds % 60);
-
-  //     // Calculate remaining milliseconds
-  //     let milliseconds = Math.floor(elapsedTime % 1000);
-
-  //     let hh = hours.toString().padStart(2, "0");
-  //     let mm = minutes.toString().padStart(2, "0");
-  //     let ss = seconds.toString().padStart(2, "0");
-  //     let ms = milliseconds.toString().padStart(2, "0").slice(0, 2);
-
-  //     if (hours) {
-  //       // Ensure two-digit formatting
-
-  //       elapsedTimeText = `${hh}:${mm}:${ss}`;
-  //     } else if (seconds) {
-  //       elapsedTimeText = `${mm}:${ss}`;
-  //     }
-
-  //     elapsedTimeTextMilli = ms;
-  //   }, 10);
-  // };
-
-  // const pauseTimer = () => {
-  //   clearInterval(intervalObj);
-  // };
 
   pause.subscribe((val) => {
-    if (!val) {
-      navigator.serviceWorker.controller.postMessage({ action: "startTimer" });
+    if (val) {
+      pauseTimer();
     } else {
-      navigator.serviceWorker.controller.postMessage({ action: "pauseTimer" });
+      startTimer();
     }
   });
 
   // Cleanup the update function on component destruction
-  // onDestroy(() => {
-  //   clearInterval(intervalObj);
-  // });
+  onDestroy(() => {
+    clearInterval(intervalObj);
+  });
 </script>
 
 <div class="item">

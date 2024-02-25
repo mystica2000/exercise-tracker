@@ -1,12 +1,18 @@
 import './app.css'
 import App from './App.svelte'
 
-if ('serviceWorker' in navigator) { console.log("whats")
+if ('serviceWorker' in navigator) { 
   
   await navigator.serviceWorker.register(
     import.meta.env.MODE === 'production' ? '/service-worker.js' : '/dev-sw.js?dev-sw'
   ).then((registration) => {
-    console.log('Service Worker registered with scope:', registration.scope);
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        navigator.serviceWorker.controller.postMessage("showNotification");
+      } else {
+        navigator.serviceWorker.controller.postMessage("hideNotification")
+      }
+    });
   })
   .catch((error) => {
     console.error('Service Worker registration failed:', error);

@@ -79,10 +79,5 @@
   .menu {
     width: 4em;
   }
-
-  td .blink {
-    border: 1px solid red;
-    background-color: red;
-    border-radius: 0px;
-  }
+  
 </style>
