@@ -1,12 +1,8 @@
 <script>
   import { dataStoreInstance } from "../../store/dataStore";
 
-  const countMaxStreaks = (activity) => {};
-
   dataStoreInstance.subscribe((val) => {
     const activity = val;
-
-    countMaxStreaks(activity);
   });
 </script>
 

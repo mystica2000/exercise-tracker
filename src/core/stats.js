@@ -11,7 +11,7 @@ import hash from 'hash-it';
 /**
  * Represents a person.
  * @typedef {Object} Stat
- * @property {number} name - The name of the person.
+ * @property {number} lastCheckedID - The name of the person.
  * @property {number} maxStreak - The age of the person.
  * @property {number} currentStreak - The age of the person.
  * @property {number} maxPRCount - The age of the person.
@@ -37,7 +37,7 @@ export const defaultStatObject = () => {
     currentStreak: 0,
     maxPRCount: 0,
     maxPRTimeAndCount: [], // contains { target: number, maxPRTimeCount: number}[],
-    statHash: ""
+    statHash: 0
   }
 }
 
@@ -78,11 +78,24 @@ export const getStreakData = (activity) => {
 const refreshCache = (activity) => {
   const stat = defaultStatObject();
 
-  // for setting max pr count
+  /**
+   * Maximum PR count
+   */
   let statDateObj = {};
+  let statTimeObj = {}; // { [count:string]: string }
+  let maxId = 0;
   for (let i = 0; i < activity.length; i++) {
-    statDateObj[activity[i].date] = (statDateObj[activity[i].date] || 0) + activity[i].count;
+    maxId = Math.max(maxId, activity[i].id);
+
+    if (!statDateObj[activity[i].date]) { statDateObj[activity[i].date] = 0; }
+    statDateObj[activity[i].date] = (statDateObj[activity[i].date]) + activity[i].count;
+
+
+    if (!statTimeObj[activity[i].count]) { statTimeObj[activity[i].count] = 0; }
+    statTimeObj[activity[i].count] = Math.max(statTimeObj[activity[i].count], timeToMinutes(activity[i].time))
   }
+
+  stat.lastCheckedID = maxId;
 
   let maxCount = 0;
   // Iterate through values of statDateObj
@@ -92,6 +105,53 @@ const refreshCache = (activity) => {
   stat.maxPRCount = maxCount;
 
 
+  /**
+   * Current Streak Streak of all time
+  */
+  let currentStreak = 0;
+  let currentDate = new Date();
+  for (const date of Object.keys(statDateObj)) {
+    const dateObj = new Date(date);
+
+    // Check if the current date is consecutive to the previous one
+    if (isConsectiveDates(currentDate, dateObj)) {
+      currentDate = dateObj;
+      currentStreak++;
+    } else {
+      break; // Break the loop if the streak is not consecutive
+    }
+  }
+
+  stat.currentStreak = currentStreak;
+
+
+  /**
+   * Max Streak
+  */
+  currentStreak = 0;
+  let previousDate;
+  let maxStreak = 0;
+  for (const { date, count } of Object.values(statDateObj)) {
+    if (!previousDate || isConsectiveDates(previousDate, date)) {
+      currentStreak += 1;
+    } else {
+      currentStreak = 1;
+    }
+
+    maxStreak = Math.max(maxStreak, currentStreak);
+    previousDate = date;
+  }
+
+  stat.maxStreak = maxStreak;
+
+  /**
+   * Personal Record for time + count; for every count()
+   */
+
+  stat.statHash = hash(activity);
+  writeToCache(stat);
+
+  return stat;
 }
 
 // validate
@@ -103,8 +163,33 @@ const isStatCacheEmpty = (str) => {
   return str?.trim()?.length == 0;
 }
 
-const prepareData = () => {
+const writeToCache = (obj) => {
+  localStorage.setItem("statsCache", obj);
+}
 
+const isConsectiveDates = (date1, date2) => {
+  const oneDay = 24 * 60 * 60 * 1000;
+
+  const diffInDays = Math.round(Math.abs((date1 - date2) / oneDay));
+
+  return diffInDays === 1;
+}
+
+
+const timeToMinutes = (time) => {
+  const segments = time.split(":");
+
+  let totalMin = 0;
+
+  if (segments.length == 2) {
+    // mm:ss
+    totalMin = parseInt(segments[0]) + (parseInt(segments[1]) / 60);
+  } else if (segments.length == 3) {
+    // hh:mm:ss
+    totalMin = (parseInt(segments[0]) * 60) + (parseInt(segments[1]) + (parseInt(segments[2]) / 60));
+  }
+
+  return totalMin;
 }
 
 // but the probelm is if someone manually edited we're f-ed lol

@@ -118,10 +118,6 @@ const getAll = async (db) => {
     request.onsuccess = (event) => {
       let allRecord = event.target.result;
 
-      allRecord = allRecord.sort(function (a, b) {
-        return b.id - a.id;
-      });
-
       resolve(allRecord);
     };
 
