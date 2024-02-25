@@ -12,25 +12,6 @@
   let elapsedTime = 0;
   let elapsedTimeTextMilli = "00";
 
-  // Check if the browser supports the Notification API
-if ('Notification' in window) {
-  Notification.requestPermission().then((permission) => {
-    if (permission === 'granted') {
-      // Permission has been granted
-      console.log('Notification permission granted!');
-    } else if (permission === 'denied') {
-      // Permission has been denied
-      console.warn('Notification permission denied!');
-    } else if (permission === 'default') {
-      // The user closed the permission prompt without making a choice
-      console.log('Notification permission dismissed.');
-    }
-  });
-} else {
-  console.error('Notification API not supported in this browser.');
-}
-
-
   action.subscribe((val) => {
     if (val == Action.RESET) {
       elapsedTimeText = "00";

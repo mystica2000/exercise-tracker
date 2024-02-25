@@ -2,7 +2,6 @@
   import RecordView from "./lib/RecordView.svelte";
   import { View } from "./constant";
   import { db, view } from "./store/store";
-  import StatsView from "./lib/StatsView.svelte";
   import { initDB } from "./db/db";
   import { onMount } from "svelte";
   import MainView from "./lib/MainView.svelte";
