@@ -1,7 +1,7 @@
 import './app.css'
 import App from './App.svelte'
+import { pause } from './store/store';
 
-console.log("testing")
 if ('serviceWorker' in navigator) {
   console.log("testing more")
   await navigator.serviceWorker.register(
@@ -18,11 +18,14 @@ if ('serviceWorker' in navigator) {
           // Permission has been granted
           console.log('Notification permission granted!');
 
+          window.onbeforeunload = function (e) {
+            reg.active.postMessage("hideNotification")
+          };
+
           document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === "visible") {
               reg.active.postMessage("hideNotification");
-            } else {
-              console.log("omg")
+            } else { // TODO: MOVE TO APP
               reg.active.postMessage("showNotification");
             }
           });

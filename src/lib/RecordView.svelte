@@ -5,9 +5,10 @@
   import RestartIcon from "../icon/restartIcon.svelte";
   import StopIcon from "../icon/stopIcon.svelte";
   import { dataStoreInstance } from "../store/dataStore";
-  import { action, db, pause, view } from "../store/store";
-  import { Action, View } from "../constant";
+  import { action, db, pause } from "../store/store";
+  import { Action } from "../constant";
   import Timer from "./components/Timer.svelte";
+  import { push } from "svelte-spa-router";
 
   let elapsedTimeText = "00";
 
@@ -20,7 +21,7 @@
 
     dataStoreInstance.dispatch({ type: "insert", obj: result });
 
-    view.set(View.MAIN_VIEW);
+    push("/");
     action.set(Action.PAUSE);
   };
 

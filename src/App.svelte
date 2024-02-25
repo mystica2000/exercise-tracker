@@ -1,10 +1,18 @@
 <script>
   import RecordView from "./lib/RecordView.svelte";
-  import { View } from "./constant";
-  import { db, view } from "./store/store";
+  import { db } from "./store/store";
   import { initDB } from "./db/db";
   import { onMount } from "svelte";
   import MainView from "./lib/MainView.svelte";
+  import Router from "svelte-spa-router";
+
+  const routes = {
+    // Exact path
+    "/": MainView,
+
+    // Using named parameters, with last being optional
+    "/timer": RecordView,
+  };
 
   let loading = true;
   let error = null;
@@ -33,11 +41,12 @@
   <p>Error: {error}</p>
 {:else}
   <div class="flex">
-    {#if $view == View.MAIN_VIEW}
+    <Router {routes} />
+    <!-- {#if $view == View.MAIN_VIEW}
       <MainView />
     {:else}
       <RecordView />
-    {/if}
+    {/if} -->
   </div>
 {/if}
 

@@ -1,7 +1,8 @@
 <script>
+  import { push } from "svelte-spa-router";
   import { View, Action } from "../constant";
   import StartIcon from "../icon/startIcon.svelte";
-  import { view, pause, action } from "../store/store";
+  import { pause, action } from "../store/store";
   import AcitivityView from "./AcitivityView.svelte";
   import StatsView from "./StatsView.svelte";
   import Tab from "./components/Tab.svelte";
@@ -9,7 +10,7 @@
   let tab = "activity";
 
   const handleStart = () => {
-    view.set(View.RECORD_VIEW);
+    push("/timer");
     pause.set(false);
     action.set(Action.PLAY);
   };
