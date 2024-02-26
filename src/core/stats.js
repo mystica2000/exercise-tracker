@@ -57,16 +57,18 @@ export const getStreakData = (activity) => {
   const refreshEntireStatCache = isStatCacheEmpty(stat);
 
   if (refreshEntireStatCache) {
-    refreshCache(activity);
+    const stat = refreshCache(activity);
+    return stat;
   } else {
     const statObj = JSON.parse(stat);
 
-    const needsRefresh = isDataTampered(statObj.lastRefetchCacheDate, activity);
+    const needsRefresh = isDataTampered(statObj.statHash, activity);
 
     if (needsRefresh) {
       refreshCache(activity);
     } else {
-      revalidateCache();
+      return statObj;
+      // revalidateCache();
     }
   }
 
@@ -128,17 +130,18 @@ const refreshCache = (activity) => {
   /**
    * Max Streak
   */
-  currentStreak = 0;
-  let previousDate;
+  let currentStreakCalc = 0;
+  let previousDate = null;
   let maxStreak = 0;
-  for (const { date, count } of Object.values(statDateObj)) {
-    if (!previousDate || isConsectiveDates(previousDate, date)) {
-      currentStreak += 1;
+  for (const [date, count] of Object.entries(statDateObj)) {
+
+    if (!previousDate || isConsectiveDates(previousDate != null ? new Date(previousDate) : null, new Date(date))) {
+      currentStreakCalc += 1;
     } else {
-      currentStreak = 1;
+      currentStreakCalc = 1;
     }
 
-    maxStreak = Math.max(maxStreak, currentStreak);
+    maxStreak = Math.max(maxStreak, currentStreakCalc);
     previousDate = date;
   }
 
@@ -160,19 +163,19 @@ const revalidateCache = () => {
 }
 
 const isStatCacheEmpty = (str) => {
-  return str?.trim()?.length == 0;
+  return str?.trim()?.length == 0 || str == null;
 }
 
 const writeToCache = (obj) => {
-  localStorage.setItem("statsCache", obj);
+  localStorage.setItem("statsCache", JSON.stringify(obj));
 }
 
 const isConsectiveDates = (date1, date2) => {
   const oneDay = 24 * 60 * 60 * 1000;
 
   const diffInDays = Math.round(Math.abs((date1 - date2) / oneDay));
-
-  return diffInDays === 1;
+  console.log(diffInDays)
+  return diffInDays === 1 || diffInDays === 0;
 }
 
 
@@ -190,6 +193,19 @@ const timeToMinutes = (time) => {
   }
 
   return totalMin;
+}
+
+export const chartData = (activity) => {
+  let statDateObj = {};
+  console.log(activity)
+  activity.sort((a, b) => a.id - b.id);
+
+  for (let i = 0; i < activity.length; i++) {
+    if (!statDateObj[activity[i].date]) { statDateObj[activity[i].date] = 0; }
+    statDateObj[activity[i].date] = (statDateObj[activity[i].date]) + activity[i].count;
+  }
+
+  return statDateObj;
 }
 
 // but the probelm is if someone manually edited we're f-ed lol
