@@ -4,6 +4,12 @@
 
 <main class="main-container">
   <div class="view">
-    <Table />
+    <select name="" id="">
+      <option value="">10</option>
+      <option value="">20</option>
+      <option value="">30</option>
+      <option value="">all</option>
+    </select>
+    <Table itemsPerPage={10} />
   </div>
 </main>
