@@ -3,6 +3,7 @@
     "moduleResolution": "bundler",
     "target": "ESNext",
     "module": "ESNext",
+    "lib": ["dom", "webworker", "es2015"],  // Include "webworker" in the "lib" array
     /**
      * svelte-preprocess cannot figure out whether you have
      * a value or a type, so tell TypeScript to enforce using
