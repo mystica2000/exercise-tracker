@@ -91,3 +91,32 @@
     margin: 1em;
   }
 }
+
+.btn-primary {
+  background-color: #007bff;
+  border: 1px solid white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3em;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3em;
+}
+
+.btn-success {
+  background-color: #5cb85c;
+  border: 1px solid white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3em;
+}

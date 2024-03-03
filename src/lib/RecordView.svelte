@@ -5,7 +5,7 @@
   import RestartIcon from "../icon/restartIcon.svelte";
   import StopIcon from "../icon/stopIcon.svelte";
   import { dataStoreInstance } from "../store/dataStore";
-  import { action, db, pause } from "../store/store";
+  import { action, curTarget, db, pause, timerRunning } from "../store/store";
   import { Action } from "../constant";
   import Timer from "./components/Timer.svelte";
   import { push } from "svelte-spa-router";
@@ -14,13 +14,13 @@
 
   const handleStop = async () => {
     const result = await withDbOperation($db, "insert", {
-      count: 1000,
+      count: parseInt($curTarget),
       date: new Intl.DateTimeFormat("en-US").format(new Date()),
       time: elapsedTimeText,
     });
 
     dataStoreInstance.dispatch({ type: "insert", obj: result });
-
+    timerRunning.set(false);
     push("/");
     action.set(Action.PAUSE);
   };
@@ -34,11 +34,22 @@
     action.update((act) => (act = $pause ? Action.PAUSE : Action.PLAY));
     pause.update((pause) => !pause);
   };
+
+  //listen to messages
+  navigator.serviceWorker.onmessage = (event) => {
+    if (event.data && event.data.action === "pauseTimer") {
+      pause.set(true);
+    } else if (event.data && event.data.action == "playTimer") {
+      pause.set(true);
+    } else if (event.data && event.data.action === "stopTimer") {
+      handleStop();
+    }
+  };
 </script>
 
 <main class="main-container">
   <div class="timer-center">
-    <h2>Target 🎯: 1000</h2>
+    <h2>Target 🎯: {$curTarget}</h2>
     <Timer bind:elapsedTimeText />
   </div>
 </main>

@@ -5,20 +5,24 @@ This repo is currently under development
 - contains stop-watch to keep track of the time
 - adjustable config to track progress
 
-TODO:
+Todo:
 
-- edit / delete
+- PWA Support (offline)
+- Stats Tab
+  - Undefined error idk why
+  - add more stats and handle accordingly
+- beautify buttons and shit lmao (looking gross btw)
 - clean up components
-- pagination for table
-- edit target
-- edit header
-- fix notifications
-- fix buttons on notifications
-- search bar for items
-- sorting
 
 Done:
 
+- edit target
+- delete
+- blink effect for delete;
+- fix buttons on notifications
+- fix notifications
+- pagination for table
+- sorting
 - cleanup
 - define db using indexedDB
 - ability to save

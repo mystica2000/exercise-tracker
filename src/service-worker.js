@@ -43,12 +43,13 @@ self.addEventListener('notificationclick', function (event) {
 
   switch (action) {
     case "pauseButton": {
+      postMessageToClient({ action: "pauseTimer" })
+      console.log("pause is clicked")
       break;
     }
     case "stopButton": {
-      break;
-    }
-    case "resetButton": {
+      postMessageToClient({ action: "stopTimer" })
+      console.log("stop is clicked")
       break;
     }
     default: {
@@ -78,3 +79,15 @@ self.addEventListener('notificationclick', function (event) {
   );
 
 });
+
+const postMessageToClient = (data) => {
+  this.clients.matchAll({
+    type: 'window',
+    includeUncontrolled: true // Include uncontrolled clients (e.g., open tabs not under the service worker's control)
+  }).then(clients => {
+    clients.forEach(client => {
+      client.postMessage(data);
+    })
+  });
+
+}

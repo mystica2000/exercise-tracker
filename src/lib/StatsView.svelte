@@ -4,10 +4,17 @@
 </script>
 
 <main class="main-container">
-  <div class="view">
+  <div class="view flex">
     <Streak />
     <section>
       <Chart />
     </section>
   </div>
 </main>
+
+<style>
+  .flex {
+    display: flex;
+    flex-direction: column;
+  }
+</style>

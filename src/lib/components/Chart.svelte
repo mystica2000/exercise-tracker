@@ -9,7 +9,6 @@
 
   let monthlyData;
   dataStoreInstance.subscribe((val) => {
-    console.log(val);
     const arr = [...val.activity];
     monthlyData = chartData(arr);
   });
@@ -50,4 +49,11 @@
   });
 </script>
 
-<canvas bind:this={chartCanvas} id="myChart"></canvas>
+<canvas id="responsive-canvas" bind:this={chartCanvas}></canvas>
+
+<style>
+  canvas {
+    width: 100%;
+    object-fit: contain;
+  }
+</style>

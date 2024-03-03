@@ -2,21 +2,24 @@
   import { push } from "svelte-spa-router";
   import { View, Action } from "../constant";
   import StartIcon from "../icon/startIcon.svelte";
-  import { pause, action } from "../store/store";
+  import { pause, action, timerRunning } from "../store/store";
   import AcitivityView from "./AcitivityView.svelte";
   import StatsView from "./StatsView.svelte";
   import Tab from "./components/Tab.svelte";
+  import TargetEditor from "./components/TargetEditor.svelte";
 
   let tab = "activity";
 
   const handleStart = () => {
     push("/timer");
+    timerRunning.set(true);
     pause.set(false);
     action.set(Action.PLAY);
   };
 </script>
 
 <header class="width100">
+  <TargetEditor />
   <Tab bind:tab />
 </header>
 {#if tab == "activity"}
@@ -40,7 +43,9 @@
   .width100 {
     width: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
   }
 
   .sticky {

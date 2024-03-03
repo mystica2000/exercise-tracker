@@ -1,7 +1,6 @@
 <script>
   import { onDestroy, onMount } from "svelte";
-  import { action, pause } from "../../store/store";
-  import { getSVGStyles } from "../../util";
+  import { action, pause, timerRunning } from "../../store/store";
   import { Action } from "../../constant";
 
   let radius; // half of the circle's diameter
@@ -11,6 +10,14 @@
   let progress = 0;
   let elapsedTime = 0;
   let elapsedTimeTextMilli = "00";
+
+  const getSVGStyles = (width) => {
+    if (width > 700 && window.screen.orientation.type == "portrait-primary") {
+      return { newRadi: 245, newHw: 500, newXy: 250 };
+    } else {
+      return { newRadi: 145, newHw: 300, newXy: 150 };
+    }
+  };
 
   action.subscribe((val) => {
     if (val == Action.RESET) {
@@ -34,14 +41,47 @@
     xy = newXy;
 
     circumference = 2 * Math.PI * radius;
+  };
 
-    console.log("sdasdasdasd", radius, hw, xy, circumference, progress);
+  const notificationsPermission = async () => {
+    const reg = await navigator.serviceWorker.ready;
+
+    // Check if the browser supports the Notification API
+    if ("Notification" in window) {
+      Notification.requestPermission().then((permission) => {
+        if (permission === "granted") {
+          // Permission has been granted
+          console.log("Notification permission granted!");
+
+          window.onbeforeunload = function (e) {
+            reg.active.postMessage("hideNotification");
+          };
+
+          document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === "visible") {
+              reg.active.postMessage("hideNotification");
+            } else if ($timerRunning) {
+              // TODO: MOVE TO APP
+              reg.active.postMessage("showNotification");
+            }
+          });
+        } else if (permission === "denied") {
+          // Permission has been denied
+          console.warn("Notification permission denied!");
+        } else if (permission === "default") {
+          // The user closed the permission prompt without making a choice
+          console.log("Notification permission dismissed.");
+        }
+      });
+    } else {
+      console.error("Notification API not supported in this browser.");
+    }
   };
 
   onMount(() => {
     setWindowWidth();
-
     window.addEventListener("resize", setWindowWidth);
+    notificationsPermission();
 
     return () => {
       window.removeEventListener("resize", setWindowWidth);

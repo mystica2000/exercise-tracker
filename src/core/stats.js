@@ -17,6 +17,7 @@ import hash from 'hash-it';
  * @property {number} maxPRCount - The age of the person.
  * @property {PR} maxPRTimeAndCount - The age of the person.
  * @property {string} statHash - The age of the person.
+ * @property {string} lastCheckedDate - The last checked date
 */
 
 
@@ -67,6 +68,12 @@ export const getStreakData = (activity) => {
     if (needsRefresh) {
       refreshCache(activity);
     } else {
+
+      const currentDate = new Intl.DateTimeFormat("en-US").format(new Date());
+      if (statObj.lastCheckedDate == currentDate) {
+        statObj.currentStreak = 0;
+      }
+
       return statObj;
       // revalidateCache();
     }
@@ -152,6 +159,7 @@ const refreshCache = (activity) => {
    */
 
   stat.statHash = hash(activity);
+  stat.lastCheckedDate = new Date();
   writeToCache(stat);
 
   return stat;

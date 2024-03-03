@@ -42,11 +42,6 @@
 {:else}
   <div class="flex">
     <Router {routes} />
-    <!-- {#if $view == View.MAIN_VIEW}
-      <MainView />
-    {:else}
-      <RecordView />
-    {/if} -->
   </div>
 {/if}
 
