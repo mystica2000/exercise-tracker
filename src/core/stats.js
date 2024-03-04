@@ -1,5 +1,6 @@
 
 import hash from 'hash-it';
+import { timeToMinutes } from '../date-util';
 
 /**
  * Represents a person.
@@ -66,7 +67,8 @@ export const getStreakData = (activity) => {
     const needsRefresh = isDataTampered(statObj.statHash, activity);
 
     if (needsRefresh) {
-      refreshCache(activity);
+      const stat = refreshCache(activity);
+      return stat;
     } else {
 
       const currentDate = new Intl.DateTimeFormat("en-US").format(new Date());
@@ -162,6 +164,7 @@ const refreshCache = (activity) => {
   stat.lastCheckedDate = new Date();
   writeToCache(stat);
 
+
   return stat;
 }
 
@@ -182,39 +185,11 @@ const isConsectiveDates = (date1, date2) => {
   const oneDay = 24 * 60 * 60 * 1000;
 
   const diffInDays = Math.round(Math.abs((date1 - date2) / oneDay));
-  console.log(diffInDays)
   return diffInDays === 1 || diffInDays === 0;
 }
 
 
-const timeToMinutes = (time) => {
-  const segments = time.split(":");
 
-  let totalMin = 0;
-
-  if (segments.length == 2) {
-    // mm:ss
-    totalMin = parseInt(segments[0]) + (parseInt(segments[1]) / 60);
-  } else if (segments.length == 3) {
-    // hh:mm:ss
-    totalMin = (parseInt(segments[0]) * 60) + (parseInt(segments[1]) + (parseInt(segments[2]) / 60));
-  }
-
-  return totalMin;
-}
-
-export const chartData = (activity) => {
-  let statDateObj = {};
-  console.log(activity)
-  activity.sort((a, b) => a.id - b.id);
-
-  for (let i = 0; i < activity.length; i++) {
-    if (!statDateObj[activity[i].date]) { statDateObj[activity[i].date] = 0; }
-    statDateObj[activity[i].date] = (statDateObj[activity[i].date]) + activity[i].count;
-  }
-
-  return statDateObj;
-}
 
 // but the probelm is if someone manually edited we're f-ed lol
 

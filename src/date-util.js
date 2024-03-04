@@ -24,3 +24,20 @@ export const compareDates = (dateString1, dateString2, sortOrder) => {
     throw new Error('Invalid sortOrder. Use "asc" for ascending or "desc" for descending.');
   }
 };
+
+
+export const timeToMinutes = (time) => {
+  const segments = time.split(":");
+
+  let totalMin = 0;
+
+  if (segments.length == 2) {
+    // mm:ss
+    totalMin = parseInt(segments[0]) + (parseInt(segments[1]) / 60);
+  } else if (segments.length == 3) {
+    // hh:mm:ss
+    totalMin = (parseInt(segments[0]) * 60) + (parseInt(segments[1]) + (parseInt(segments[2]) / 60));
+  }
+
+  return totalMin;
+}

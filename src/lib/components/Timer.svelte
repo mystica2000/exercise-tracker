@@ -62,7 +62,10 @@
               reg.active.postMessage("hideNotification");
             } else if ($timerRunning) {
               // TODO: MOVE TO APP
-              reg.active.postMessage("showNotification");
+              reg.active.postMessage({
+                action: "showNotification",
+                pause: $pause,
+              });
             }
           });
         } else if (permission === "denied") {

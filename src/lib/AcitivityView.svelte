@@ -3,7 +3,5 @@
 </script>
 
 <main class="main-container">
-  <div class="view">
-    <Table />
-  </div>
+  <Table />
 </main>

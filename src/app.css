@@ -120,3 +120,86 @@
   justify-content: center;
   padding: 0.3em;
 }
+
+dialog {
+  min-width: 250px;
+  width: 100%;
+  max-width: 500px;
+  z-index: 2;
+}
+
+dialog {
+  border-radius: 5px;
+  border-width: 1px;
+  transition: all 2s;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+dialog::backdrop {
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7));
+  animation: fade-in 1s;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.div-padding {
+  padding: 15px;
+}
+
+.dlg-header {
+  display: grid;
+  grid-template-columns: 1fr 0fr;
+  background-color: #419eff;
+  padding: 4px;
+}
+
+.dlg-label {
+  display: inline-block;
+  text-align: left;
+  width: 100%;
+}
+
+.dlg-input {
+  border: 1px solid black;
+  padding: 1em;
+  margin: 1em;
+  font-size: 1rem;
+}
+
+.dlg-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  background: bottom;
+}
+
+.dlg-footer-btn {
+  display: flex;
+  flex-direction: row;
+  font-weight: 400;
+  border: 1px solid black;
+  border-radius: 20px;
+  padding: 0.1;
+  margin: 0.5em;
+  width: 50%;
+  justify-content: center;
+  gap: 1em;
+  align-items: center;
+}
+
+.cancel {
+  background-color: #ff6574;
+}
+
+.save {
+  background-color: #7ff37f;
+}

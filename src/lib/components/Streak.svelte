@@ -1,30 +1,20 @@
 <script>
-  import { onDestroy, onMount } from "svelte";
-  import { getStreakData } from "../../core/stats";
-  import { dataStoreInstance } from "../../store/dataStore";
-
-  let result;
-
-  const subscription = dataStoreInstance.subscribe((val) => {
-    const activity = val.activity;
-
-    result = getStreakData(activity);
-  });
-
-  onDestroy(subscription);
+  export let streakResult;
 </script>
 
 <div class="streak-header">
   <div>
-    <span class="streak">🔥 Max PR Count: {result?.maxPRCount}</span>
+    <span class="streak black"
+      >🔥 Max Per Day Count: {streakResult.maxPRCount}</span
+    >
   </div>
   <div
     style="
     gap: 1em;
     display: flex;"
   >
-    <span class="streak">🔥 Max Streaks: {result?.maxStreak}</span>
-    <span class="streak">🔥 Current Streak: {result?.currentStreak}</span>
+    <span class="streak voilet">🔥 Max Streaks: {streakResult.maxStreak}</span>
+    <span class="streak">🔥 Current Streak: {streakResult.currentStreak}</span>
   </div>
 </div>
 
@@ -34,6 +24,14 @@
     border: 2px solid #4bb543;
     padding: 1em;
     display: block;
+  }
+
+  .black {
+    background-color: #000000;
+  }
+
+  .voilet {
+    background-color: #434cb5;
   }
 
   .streak-header {

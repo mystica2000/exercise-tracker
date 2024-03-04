@@ -8,14 +8,13 @@ This repo is currently under development
 Todo:
 
 - PWA Support (offline)
-- Stats Tab
-  - Undefined error idk why
-  - add more stats and handle accordingly
-- beautify buttons and shit lmao (looking gross btw)
-- clean up components
 
 Done:
 
+- fix time weird on chart
+- Stats Tab
+  - add more stats and handle accordingly
+- Undefined error idk why
 - edit target
 - delete
 - blink effect for delete;
@@ -25,6 +24,7 @@ Done:
 - sorting
 - cleanup
 - define db using indexedDB
+- clean up components
 - ability to save
 - add heatmap for streaks, PR etc
 - cleanup components
@@ -36,3 +36,5 @@ Done:
 - font-sizes acc. to screen size
 - push notifications (with running timer)
 - configuring chartjs to work with application data
+- beautify buttons and shit lmao (looking gross btw)
+- notification handle for pause / play without redirecting service worker

@@ -10,7 +10,7 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('message', (event) => {
-  console.log('Service Worker received a message:', event.data);
+  console.log('Service Worker received a message:', event.data && event.data.action === "showNotification");
 
   if (event.data && event.data === "hideNotification") {
     // Add logic to hide or close any existing notifications
@@ -19,20 +19,12 @@ self.addEventListener('message', (event) => {
         notification.close();
       });
     });
-  } else if (event.data && event.data === "showNotification") {
-    // Add logic to show a new notification
-    this.registration.showNotification('Your timer is actively running. Stay focused', {
-      body: 'Timer in Progress...',
-      data: {
-        url: 'http://localhost:5173/#/timer', // Add the URL you want to open
-      },
-      actions: [
-        { action: 'pauseButton', title: 'Pause' },
-        { action: 'stopButton', title: 'Stop' },
-        { action: 'resetButton', title: 'Reset' },
-      ]
-      // Add other notification options as needed
-    });
+  } else if (event.data && event.data.action === "showNotification") {
+    if (event.data.pause) {
+      timerPausedNotification();
+    } else {
+      timerRunningNotification();
+    }
   }
 });
 
@@ -42,22 +34,43 @@ self.addEventListener('notificationclick', function (event) {
   const action = event.action;
 
   switch (action) {
+    case "playButton": {
+      postMessageToClient({ action: "playTimer" })
+      timerRunningNotification();
+      break;
+    }
     case "pauseButton": {
       postMessageToClient({ action: "pauseTimer" })
-      console.log("pause is clicked")
+      timerPausedNotification();
       break;
     }
     case "stopButton": {
       postMessageToClient({ action: "stopTimer" })
-      console.log("stop is clicked")
+      openApp(event);
       break;
     }
     default: {
+      openApp(event);
       break;
     }
   }
 
   notification.close();
+});
+
+const postMessageToClient = (data) => {
+  this.clients.matchAll({
+    type: 'window',
+    includeUncontrolled: true // Include uncontrolled clients (e.g., open tabs not under the service worker's control)
+  }).then(clients => {
+    clients.forEach(client => {
+      client.postMessage(data);
+    })
+  });
+
+}
+
+const openApp = (event) => {
   event.waitUntil(
     this.clients.matchAll({
       type: 'window',
@@ -77,17 +90,48 @@ self.addEventListener('notificationclick', function (event) {
       }
     })
   );
-
-});
-
-const postMessageToClient = (data) => {
-  this.clients.matchAll({
-    type: 'window',
-    includeUncontrolled: true // Include uncontrolled clients (e.g., open tabs not under the service worker's control)
-  }).then(clients => {
-    clients.forEach(client => {
-      client.postMessage(data);
-    })
-  });
-
 }
+
+
+const timerPausedNotification = () => {
+  // Add logic to show a new notification
+  this.registration.showNotification('Your timer is Paused!', {
+    body: 'Timer Paused...',
+    data: {
+      url: 'http://localhost:5173/#/timer', // Add the URL you want to open
+    },
+    actions: [
+      { action: 'playButton', title: 'Play' },
+      { action: 'stopButton', title: 'Stop' },
+    ]
+    // Add other notification options as needed
+  });
+}
+
+const timerRunningNotification = () => {
+  // Add logic to show a new notification
+  this.registration.showNotification('Your timer is actively running. Stay focused', {
+    body: 'Timer in Progress...',
+    data: {
+      url: 'http://localhost:5173/#/timer', // Add the URL you want to open
+    },
+    actions: [
+      { action: 'pauseButton', title: 'Pause' },
+      { action: 'stopButton', title: 'Stop' },
+    ]
+    // Add other notification options as needed
+  });
+}
+
+
+const cacheName = "MyCache_1";
+const precachedResources = ["/"];
+
+async function precache() {
+  const cache = await caches.open(cacheName);
+  return cache.addAll(precachedResources);
+}
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(precache());
+});

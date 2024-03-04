@@ -9,8 +9,6 @@
   const routes = {
     // Exact path
     "/": MainView,
-
-    // Using named parameters, with last being optional
     "/timer": RecordView,
   };
 
@@ -33,7 +31,7 @@
   };
 </script>
 
-<h1 style="text-align: center; font-size:3em">Jump Rope Tracker ✍🏼</h1>
+<h1 style="text-align: center;" class="font-size">Jump Rope Tracker 🌌</h1>
 
 {#if loading}
   <p>Loading...</p>
@@ -51,5 +49,13 @@
     flex-direction: column;
 
     height: calc(100% - 100px);
+  }
+
+  .font-size {
+    font-size: 3em;
+
+    @media screen and (max-width: 500px) {
+      font-size: 2em;
+    }
   }
 </style>

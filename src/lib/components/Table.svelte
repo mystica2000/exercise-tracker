@@ -8,6 +8,7 @@
   import { compareDates } from "../../date-util";
   import DeleteIcon from "../../icon/deleteIcon.svelte";
   import Delete from "../dialogs/deleteDialog.svelte";
+  import EmptyData from "./EmptyData.svelte";
 
   let itemsPerPage = writable("10");
 
@@ -19,7 +20,7 @@
 
   let unique = {}; // every {} is unique, {} === {} evaluates to false
 
-  let result;
+  let result = [];
   let currentPage = 1;
   let totalPages = 0;
 
@@ -115,71 +116,78 @@
   onDestroy(subscription);
 </script>
 
-<div class="right-align">
-  <label for="activity">Activity per page</label>
-  <select name="" id="activity" bind:value={$itemsPerPage}>
-    <option value="10">10</option>
-    <option value="20">20</option>
-    <option value="30">30</option>
-    <option value="0">all</option>
-  </select>
-</div>
-
-<table>
-  <thead>
-    <th
-      ><span class="sort"
-        >Date<button on:click={applySortByDate} class="btn-primary"
-          ><SortIcon /></button
-        ></span
-      ></th
-    >
-    <th>Minutes</th>
-    <th
-      ><span class="sort"
-        >Count <button on:click={applySortByCount} class="btn-primary"
-          ><SortIcon /></button
-        ></span
-      ></th
-    >
-    <th></th>
-  </thead>
-  <tbody>
-    {#if result}
-      {#key unique}
-        {#each getCurrentPageData(currentPage) as row (row.id)}
-          <tr id={`log-${row.id}`}>
-            <td>{row.date}</td>
-            <td>{row.time}</td>
-            <td>{row.count}</td>
-            <td class="menu">
-              <button
-                class="btn-danger"
-                on:click={() => handleDeleteRow(row.id)}
-              >
-                <DeleteIcon />
-              </button>
-            </td>
-          </tr>
-        {/each}
-      {/key}
+{#if result.length > 0}
+  <div class="view">
+    {#if result.length > 10}
+      <div class="right-align">
+        <label for="activity">Activity per page</label>
+        <select name="" id="activity" bind:value={$itemsPerPage}>
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+          <option value="0">all</option>
+        </select>
+      </div>
     {/if}
-  </tbody>
-</table>
 
-{#if parseInt($itemsPerPage) > 0}
-  <div class="btn-pagination-parent">
-    <span class="btn-pagination">
-      <button on:click={onPrevPage} disabled={currentPage == 1}>prev</button>
-      {currentPage} of {totalPages}
-      <button on:click={onNextPage} disabled={currentPage == totalPages}
-        >next</button
-      >
-    </span>
+    <table>
+      <thead>
+        <th
+          ><span class="sort"
+            >Date<button on:click={applySortByDate} class="btn-primary"
+              ><SortIcon /></button
+            ></span
+          ></th
+        >
+        <th>Minutes</th>
+        <th
+          ><span class="sort"
+            >Count <button on:click={applySortByCount} class="btn-primary"
+              ><SortIcon /></button
+            ></span
+          ></th
+        >
+        <th></th>
+      </thead>
+      <tbody>
+        {#key unique}
+          {#each getCurrentPageData(currentPage) as row (row.id)}
+            <tr id={`log-${row.id}`}>
+              <td>{row.date}</td>
+              <td>{row.time}</td>
+              <td>{row.count}</td>
+              <td class="menu">
+                <button
+                  class="btn-danger"
+                  on:click={() => handleDeleteRow(row.id)}
+                >
+                  <DeleteIcon />
+                </button>
+              </td>
+            </tr>
+          {/each}
+        {/key}
+      </tbody>
+    </table>
+
+    {#if parseInt($itemsPerPage) > 0 && result.length > 10}
+      <div class="btn-pagination-parent">
+        <span class="btn-pagination">
+          <button on:click={onPrevPage} disabled={currentPage == 1}>prev</button
+          >
+          {currentPage} of {totalPages}
+          <button on:click={onNextPage} disabled={currentPage == totalPages}
+            >next</button
+          >
+        </span>
+      </div>
+    {/if}
+
+    <Delete {id} />
   </div>
+{:else}
+  <EmptyData info="No Activity to show yet" />
 {/if}
-
-<Delete {id} />
 
 <!-- introduce pagination -->
 

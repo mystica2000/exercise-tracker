@@ -1,23 +1,19 @@
 <script>
   import chartjs from "chart.js/auto";
   import { onMount } from "svelte";
-  import { dataStoreInstance } from "../../store/dataStore";
-  import { chartData } from "../../core/stats";
 
   let ctx;
-  let chartCanvas;
+  let lineGraphCanvas;
+  let barGraphCanvas;
 
-  let monthlyData;
-  dataStoreInstance.subscribe((val) => {
-    const arr = [...val.activity];
-    monthlyData = chartData(arr);
-  });
+  export let lineGraphData;
+  export let barGraphData;
 
   const data = {
     datasets: [
       {
-        label: "Target",
-        data: monthlyData,
+        label: "Per day count",
+        data: lineGraphData,
         borderColor: "#00FF00",
         backgroundColor: "#00FF00",
         pointStyle: "circle",
@@ -27,9 +23,9 @@
     ],
   };
 
-  onMount(async (promise) => {
-    ctx = chartCanvas.getContext("2d");
-    var chart = new chartjs(ctx, {
+  const lineGraph = () => {
+    ctx = lineGraphCanvas.getContext("2d");
+    new chartjs(ctx, {
       type: "line",
       data: data,
       options: {
@@ -46,10 +42,53 @@
         },
       },
     });
+  };
+
+  const barGraph = () => {
+    ctx = barGraphCanvas.getContext("2d");
+    new chartjs(ctx, {
+      type: "bar",
+      data: {
+        labels: barGraphData.labels,
+        datasets: [
+          {
+            label: "minimum time taken for target",
+            data: barGraphData.times,
+            borderColor: "#00FF00",
+            backgroundColor: "#00FF00",
+            borderWidth: 0.4,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: (value) => formatTime(value),
+            },
+          },
+        },
+      },
+    });
+  };
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${String(minutes).padStart(2, "0")}:${String(remainingSeconds).padStart(2, "0")}`;
+  };
+
+  onMount(async (promise) => {
+    barGraph();
+    lineGraph();
   });
 </script>
 
-<canvas id="responsive-canvas" bind:this={chartCanvas}></canvas>
+<canvas id="line-graph" bind:this={lineGraphCanvas}></canvas>
+
+<canvas id="bar-chart" bind:this={barGraphCanvas}></canvas>
 
 <style>
   canvas {

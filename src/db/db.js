@@ -86,7 +86,6 @@ const insertRecord = async (db, data) => {
 
     request.onsuccess = (event) => {
       const addedRecord = { ...data, id: event.target.result };
-      console.log(addedRecord)
       // Now you can use the key to update the data
       var updateRequest = activityStore.put({ ...data, id: addedRecord.id }, addedRecord.id);
 
@@ -156,7 +155,6 @@ const deleteRecord = (db, key) => {
 
     request.onsuccess = (event) => {
       const deleteRecord = event.target.result;
-      console.log(deleteRecord);
       resolve(deleteRecord);
     };
 

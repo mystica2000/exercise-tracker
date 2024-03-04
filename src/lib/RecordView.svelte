@@ -40,7 +40,7 @@
     if (event.data && event.data.action === "pauseTimer") {
       pause.set(true);
     } else if (event.data && event.data.action == "playTimer") {
-      pause.set(true);
+      pause.set(false);
     } else if (event.data && event.data.action === "stopTimer") {
       handleStop();
     }
