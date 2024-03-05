@@ -134,16 +134,20 @@
       <thead>
         <th
           ><span class="sort"
-            >Date<button on:click={applySortByDate} class="btn-primary"
-              ><SortIcon /></button
+            >Date<button
+              on:click={applySortByDate}
+              class="btn-primary"
+              aria-label="sort by date"><SortIcon /></button
             ></span
           ></th
         >
         <th>Minutes</th>
         <th
           ><span class="sort"
-            >Count <button on:click={applySortByCount} class="btn-primary"
-              ><SortIcon /></button
+            >Count <button
+              on:click={applySortByCount}
+              class="btn-primary"
+              aria-label="sort by count"><SortIcon /></button
             ></span
           ></th
         >
@@ -160,6 +164,7 @@
                 <button
                   class="btn-danger"
                   on:click={() => handleDeleteRow(row.id)}
+                  aria-label="delete log"
                 >
                   <DeleteIcon />
                 </button>
@@ -229,6 +234,7 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
+    align-items: center;
   }
 
   .menu {

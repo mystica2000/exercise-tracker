@@ -11,7 +11,9 @@
 
 <h2 class="target">
   🎯 Your Current Target: {$curTarget}
-  <button class="btn-edit" on:click={handleEditTarget}><EditIcon /></button>
+  <button class="btn-edit" on:click={handleEditTarget} aria-label="Edit Target"
+    ><EditIcon /></button
+  >
 </h2>
 
 <EditDialog />
