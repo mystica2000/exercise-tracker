@@ -1,7 +1,6 @@
 // @ts-nocheck
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/7.0.0/workbox-sw.js');
 
-const { precacheAndRoute } = workbox.precaching;
 workbox.precaching.precacheAndRoute(self.__WB_MANIFEST);
 
 
@@ -66,7 +65,7 @@ self.addEventListener('notificationclick', function (event) {
 });
 
 const postMessageToClient = (data) => {
-  this.clients.matchAll({
+  self.clients.matchAll({
     type: 'window',
     includeUncontrolled: true // Include uncontrolled clients (e.g., open tabs not under the service worker's control)
   }).then(clients => {
@@ -79,7 +78,7 @@ const postMessageToClient = (data) => {
 
 const openApp = (event) => {
   event.waitUntil(
-    this.clients.matchAll({
+    self.clients.matchAll({
       type: 'window',
       includeUncontrolled: true // Include uncontrolled clients (e.g., open tabs not under the service worker's control)
     }).then(clients => {
@@ -93,7 +92,7 @@ const openApp = (event) => {
         return matchingClient.focus();
       } else {
         // If no matching client, open a new window with the specified URL
-        return this.clients.openWindow(event.notification.data.url);
+        return self.clients.openWindow(event.notification.data.url);
       }
     })
   );
