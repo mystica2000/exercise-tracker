@@ -8,7 +8,7 @@ workbox.precaching.precacheAndRoute(self.__WB_MANIFEST);
 // Usage example: Close all notifications on activation
 self.addEventListener('activate', event => {
   event.waitUntil(
-    this.registration.getNotifications().then(notifications => {
+    self.registration.getNotifications().then(notifications => {
       notifications.forEach(notification => {
         notification.close();
       });
@@ -21,7 +21,7 @@ self.addEventListener('message', (event) => {
 
   if (event.data && event.data === "hideNotification") {
     // Add logic to hide or close any existing notifications
-    this.registration.getNotifications().then(notifications => {
+    self.registration.getNotifications().then(notifications => {
       notifications.forEach(notification => {
         notification.close();
       });
@@ -85,7 +85,7 @@ const openApp = (event) => {
     }).then(clients => {
       // Check if there's at least one matching client
       const matchingClient = clients.find(client => {
-        return client.url === 'http://localhost:5173/#/timer'; // Replace with your URL
+        return client.url === (import.meta.env.PROD == true ? "https://exercise-tracker.pages.dev/#/timer" : 'http://localhost:5173/#/timer'); // Replace with your URL
       });
 
       if (matchingClient) {
@@ -102,10 +102,10 @@ const openApp = (event) => {
 
 const timerPausedNotification = () => {
   // Add logic to show a new notification
-  this.registration.showNotification('Your timer is Paused!', {
+  self.registration.showNotification('Your timer is Paused!', {
     body: 'Timer Paused...',
     data: {
-      url: 'http://localhost:5173/#/timer', // Add the URL you want to open
+      url: import.meta.env.PROD == true ? "https://exercise-tracker.pages.dev/#/timer" : 'http://localhost:5173/#/timer', // Add the URL you want to open
     },
     actions: [
       { action: 'playButton', title: 'Play' },
@@ -117,10 +117,10 @@ const timerPausedNotification = () => {
 
 const timerRunningNotification = () => {
   // Add logic to show a new notification
-  this.registration.showNotification('Your timer is actively running. Stay focused', {
+  self.registration.showNotification('Your timer is actively running. Stay focused', {
     body: 'Timer in Progress...',
     data: {
-      url: 'http://localhost:5173/#/timer', // Add the URL you want to open
+      url: import.meta.env.PROD == true ? "https://exercise-tracker.pages.dev/#/timer" : 'http://localhost:5173/#/timer', // Add the URL you want to open
     },
     actions: [
       { action: 'pauseButton', title: 'Pause' },
@@ -129,16 +129,3 @@ const timerRunningNotification = () => {
     // Add other notification options as needed
   });
 }
-
-
-const cacheName = "MyCache_1";
-const precachedResources = ["/"];
-
-async function precache() {
-  const cache = await caches.open(cacheName);
-  return cache.addAll(precachedResources);
-}
-
-self.addEventListener("install", (event) => {
-  event.waitUntil(precache());
-});
