@@ -9,7 +9,8 @@ function dataStore(init) {
   const reducer = (state, action) => {
     switch (action.type) {
       case "insert": {
-        return { activity: [...state.activity, action.obj] }
+        if (!state.activity) { state.activity = [] }
+        return { activity: [...state?.activity, action.obj] }
       }
       case "delete": {
         return { activity: state.activity.filter((aObj) => aObj.id != action.obj) }
