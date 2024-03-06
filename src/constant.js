@@ -9,9 +9,3 @@ export const Action = {
   PLAY: 1,
   RESET: 2
 }
-
-export const State = {
-  START: 0,
-  SAVED: 1,
-  NOT_SAVED: 2
-}

@@ -1,10 +1,13 @@
 import { writable } from "svelte/store";
 
+
+/**
+ * Redux-like store in svelte
+ * inspired by fireship : https://fireship.io/snippets/custom-svelte-stores/
+ */
 function dataStore(init) {
 
   const { update, subscribe } = writable(init);
-
-
 
   const reducer = (state, action) => {
     switch (action.type) {
@@ -16,6 +19,7 @@ function dataStore(init) {
         return { activity: state.activity.filter((aObj) => aObj.id != action.obj) }
       }
       case "bulkInsert": {
+        // sort by id and insert
         const sortedDate = action.obj.sort(function (a, b) {
           return b.id - a.id;
         });

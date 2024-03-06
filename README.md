@@ -7,10 +7,9 @@ This repo is currently under development
 
 Todo:
 
-- PWA Support (offline)
-
 Done:
 
+- PWA Support (offline)
 - fix time weird on chart
 - Stats Tab
   - add more stats and handle accordingly

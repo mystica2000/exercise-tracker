@@ -1,5 +1,3 @@
-import { timeToMinutes } from "../date-util";
-
 export const prepareLineGraphData = (activity) => {
   let lineGraphObj = {};
   activity.sort((a, b) => a.id - b.id);
@@ -8,8 +6,6 @@ export const prepareLineGraphData = (activity) => {
     if (!lineGraphObj[activity[i].date]) { lineGraphObj[activity[i].date] = 0; }
     lineGraphObj[activity[i].date] = (lineGraphObj[activity[i].date]) + activity[i].count;
   }
-
-  // fill the remaining date (between)
 
   return lineGraphObj;
 }

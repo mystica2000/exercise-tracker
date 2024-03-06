@@ -18,6 +18,7 @@
     fetchActivity();
   });
 
+  // To refresh a component (trigger change detection)
   let unique = {}; // every {} is unique, {} === {} evaluates to false
 
   let result = [];
@@ -77,7 +78,7 @@
   };
 
   const restart = () => {
-    unique = {};
+    unique = {}; // it will re-run the block of code
   };
 
   itemsPerPage.subscribe(() => {
@@ -92,7 +93,6 @@
       result = [...res.activity];
       restart();
     }
-    //totalPages = Math.ceil(result.length / parseInt($itemsPerPage));
   });
 
   const handleDeleteRow = async (rowId) => {
@@ -141,10 +141,10 @@
             ></span
           ></th
         >
-        <th>Minutes</th>
+        <th>Time</th>
         <th
           ><span class="sort"
-            >Count <button
+            >Target <button
               on:click={applySortByCount}
               class="btn-primary"
               aria-label="sort by count"><SortIcon /></button
@@ -175,6 +175,7 @@
       </tbody>
     </table>
 
+    <!-- introduce pagination -->
     {#if parseInt($itemsPerPage) > 0 && result.length > 10}
       <div class="btn-pagination-parent">
         <span class="btn-pagination">
@@ -193,8 +194,6 @@
 {:else}
   <EmptyData info="No Activity to show yet" />
 {/if}
-
-<!-- introduce pagination -->
 
 <style>
   table {

@@ -1,5 +1,9 @@
 <script>
   export let info;
+
+  /**
+   * If no records/stats are present then this component will be displayed
+   */
 </script>
 
 <div class="center">{info}. Press Record to get Started</div>

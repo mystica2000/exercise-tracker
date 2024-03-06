@@ -77,7 +77,6 @@ export const getStreakData = (activity) => {
       }
 
       return statObj;
-      // revalidateCache();
     }
   }
 
@@ -168,11 +167,6 @@ const refreshCache = (activity) => {
   return stat;
 }
 
-// validate
-const revalidateCache = () => {
-
-}
-
 const isStatCacheEmpty = (str) => {
   return str?.trim()?.length == 0 || str == null;
 }
@@ -187,12 +181,3 @@ const isConsectiveDates = (date1, date2) => {
   const diffInDays = Math.round(Math.abs((date1 - date2) / oneDay));
   return diffInDays === 1 || diffInDays === 0;
 }
-
-
-
-
-// but the probelm is if someone manually edited we're f-ed lol
-
-// ..{ checkedUptoId: id which is checked, maxSoFarStreak: number, maxPRCount: number,  maxPRTimeAndCountForEveryTarget: { count: number, time: number };
-
-// ... so that i can avoid recalculating everytime ... can i use localstorage or indexeddb .. but it is just a object, not more will be stored... ok i will have isModified: boolean; .. if update/delete is applied then, set isModified to true.. so on the next time, i will refetch all and calculate... can i have like for once a week, refetch like that
