@@ -5,11 +5,13 @@
   import { onMount } from "svelte";
   import MainView from "./lib/MainView.svelte";
   import Router from "svelte-spa-router";
+  import AboutView from "./lib/AboutView.svelte";
 
   const routes = {
     // Exact path
     "/": MainView,
     "/timer": RecordView,
+    "/about": AboutView,
   };
 
   let loading = true;

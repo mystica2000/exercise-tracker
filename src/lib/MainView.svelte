@@ -19,6 +19,7 @@
 </script>
 
 <header class="width100">
+  <a href="#/about" class="links">About</a>
   <TargetEditor />
   <Tab bind:tab />
 </header>
