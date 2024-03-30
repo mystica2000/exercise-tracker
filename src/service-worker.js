@@ -3,6 +3,7 @@ importScripts('https://storage.googleapis.com/workbox-cdn/releases/7.0.0/workbox
 
 workbox.precaching.precacheAndRoute(self.__WB_MANIFEST);
 
+const version = 1;
 
 // Usage example: Close all notifications on activation
 self.addEventListener('activate', event => {
