@@ -80,7 +80,6 @@
   max-width: 790px;
   width: 100%;
   margin-top: 2em;
-  margin-bottom: 2em;
 }
 
 @media screen and (max-width: 800px) {
@@ -202,4 +201,8 @@ dialog::backdrop {
 
 .save {
   background-color: #7ff37f;
+}
+
+.links {
+  color: springgreen;
 }

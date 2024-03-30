@@ -9,6 +9,9 @@
   import { Action } from "../constant";
   import Timer from "./components/Timer.svelte";
   import { push } from "svelte-spa-router";
+  import EditIcon from "../icon/editIcon.svelte";
+  import EditDialog from "./dialogs/editDialog.svelte";
+  import { get } from "svelte/store";
 
   let elapsedTimeText = "00";
 
@@ -35,6 +38,16 @@
     pause.update((pause) => !pause);
   };
 
+  const handleEditTarget = () => {
+    if (!get(pause)) {
+      action.update((act) => (act = Action.PAUSE));
+      pause.update((pause) => !pause);
+    }
+
+    const dialog = document.getElementById("edit-dialog");
+    dialog["showModal"]();
+  };
+
   //listen to messages
   navigator.serviceWorker.onmessage = (event) => {
     if (event.data && event.data.action === "pauseTimer") {
@@ -49,11 +62,19 @@
 
 <main class="main-container">
   <div class="timer-center">
-    <h2>Target 🎯: {$curTarget}</h2>
+    <h2>
+      Target 🎯: {$curTarget}
+      <button
+        class="btn-edit"
+        on:click={handleEditTarget}
+        aria-label="Edit Target"><EditIcon /></button
+      >
+    </h2>
     <Timer bind:elapsedTimeText />
   </div>
 </main>
 
+<EditDialog />
 <footer class="btn-center footer-btn">
   <button
     class="btn-small btn"
@@ -105,6 +126,17 @@
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+  }
+
+  .btn-edit {
+    background: white;
+    border: 1px solid black;
+    border-radius: 10px;
+    width: 3em;
+    height: 3em;
+    margin-top: 1em;
+    top: -5px;
+    position: relative;
   }
 
   @media screen and (min-width: 720px) {
